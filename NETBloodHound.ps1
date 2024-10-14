@@ -1,5 +1,5 @@
 # Define the output file
-$outputFile = "BloodhoundNetOutput.json"
+$outputFile = "EnhancedNetworkOutput.json"
 
 # Initialize output arrays
 $usersList = @()
@@ -40,24 +40,9 @@ foreach ($line in $groupsOutput) {
     if ($line -match "^\s*(\S+)\s+") {
         $groupName = $matches[1]
         $groupInfo = @{
-            "Name"         = $groupName
-            "SamAccountName" = $groupName
-            "Members"      = @()  # Initialize an empty array for members
-            "Type"         = "Group"
-        }
-        $membersOutput = Run-Command "net localgroup $groupName"
-        
-        # Parse member output
-        foreach ($memberLine in $membersOutput) {
-            if ($memberLine -match "^\s*(\S+)\s+") {
-                $memberName = $matches[1]
-                $memberInfo = @{
-                    "Name"             = $memberName
-                    "SamAccountName"   = $memberName
-                    "Type"             = "User"  # Assume all members are users for simplicity
-                }
-                $groupInfo.Members += $memberInfo
-            }
+            "Name"             = $groupName
+            "SamAccountName"   = $groupName
+            "Type"             = "Group"
         }
         $groupsList += $groupInfo
     }
@@ -102,7 +87,7 @@ $finalOutput = @{
     "ServiceAccounts"    = $serviceAccountsList
 }
 
-# Convert the output to JSON format for BloodHound
+# Convert the output to JSON format
 $jsonOutput = $finalOutput | ConvertTo-Json -Depth 4
 
 # Save the JSON to a file
